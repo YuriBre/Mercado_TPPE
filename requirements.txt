@@ -1,5 +1,5 @@
 fastapi
 uvicorn[standard]
-databases
-sqlalchemy
-aiosqlite
+databases[aiomysql]
+aiomysql
+cryptography
