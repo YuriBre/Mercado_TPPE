@@ -17,16 +17,22 @@ services:
       timeout: 5s
       retries: 5
 
-  frontend:
-    build:
-      context: ./frontend
-    ports:
-      - "3000:3000"
-
   web:
-    build: .
+    build:
+      context: ./backend
     ports:
       - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
+
+  tests:
+    build:
+      context: ./backend
+    command: >
+      sh -c "pytest app/tests --disable-warnings"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "mysql+aiomysql://user:user123@db:3306/mercado"
