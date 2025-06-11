@@ -17,6 +17,12 @@ services:
       timeout: 5s
       retries: 5
 
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+
   web:
     build: .
     ports:

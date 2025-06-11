@@ -3,3 +3,4 @@ uvicorn[standard]
 databases[aiomysql]
 aiomysql
 cryptography
+httpx
