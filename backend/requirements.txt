@@ -4,3 +4,5 @@ databases[aiomysql]
 aiomysql
 cryptography
 httpx
+pytest
+pytest-asyncio
