@@ -1,8 +1,10 @@
-fastapi
-uvicorn[standard]
-databases[aiomysql]
-aiomysql
-cryptography
-httpx
+flask
 pytest
-pytest-asyncio
+fastapi
+uvicorn
+pymysql
+sqlalchemy
+pylint
+cryptography
+requests
+httpx
