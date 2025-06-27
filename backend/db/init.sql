@@ -28,3 +28,13 @@ CREATE TABLE IF NOT EXISTS venda (
     FOREIGN KEY (cliente_id) REFERENCES cliente(id),
     FOREIGN KEY (produto_id) REFERENCES produto(id)
 );
+
+-- Tabela Pagamento
+CREATE TABLE IF NOT EXISTS pagamento (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    venda_id INT NOT NULL,
+    valor_pago DECIMAL(10, 2) NOT NULL,
+    metodo_pagamento ENUM('dinheiro', 'cartao', 'pix', 'boleto') NOT NULL,
+    data_pagamento DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (venda_id) REFERENCES venda(id) ON DELETE CASCADE
+);
