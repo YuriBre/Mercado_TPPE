@@ -1,4 +1,28 @@
 services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      DATABASE_URL: mysql+pymysql://root:root@database/mercado
+    command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+    depends_on:
+      database:
+        condition: service_healthy
+
+  tests:
+    build:
+      context: ./backend
+    volumes:   
+      - ./backend:/app
+    environment:
+      - PYTHONPATH=/app
+    command: ["pytest", "--disable-warnings", "-v"]
+    depends_on:
+      - backend
 
   database:
     image: mysql:8.0
@@ -9,24 +33,11 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       retries: 5
-  backend:
-    build:
-      context: ./backend
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./backend:/main
-    environment:
-      DATABASE_URL: mysql+pymysql://root:root@database/mercado
-    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-    depends_on:
-      database:
-        condition: service_healthy
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -38,3 +49,12 @@ services:
       - "8080:80"
     depends_on:
       - database
+
+  lint:
+    build: 
+      context: ./backend
+    volumes:
+      - ./backend:/app
+    environment:
+      - PYTHONPATH=/app
+    command: ["pylint", "--disable=R,C", "."]
