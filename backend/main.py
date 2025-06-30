@@ -1,7 +1,6 @@
-from fastapi import FastAPI
+from database import Base, engine
 
-app = FastAPI()
-
-@app.get("/")
-def root():
-    return {"message": "Sistema de Vendas API"}
+# Cria as tabelas no banco de dados
+print("Criando tabelas no banco de dados...")
+Base.metadata.create_all(bind=engine)
+print("Tabelas criadas com sucesso!")
