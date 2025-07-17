@@ -18,3 +18,11 @@ class ProdutoCreate(BaseModel):
     valor: float
     lucro_percentual: float
     qtd_estoque: int
+
+class ProdutoResponse(BaseModel):
+    id: Optional[int]
+    nome: str
+    valor: float
+
+    class Config:
+        orm_mode = True
