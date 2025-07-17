@@ -18,16 +18,16 @@ def adicionar_cliente(cliente: ClienteCreate, db: Session = Depends(get_db)):
     db.refresh(novo_cliente)
     return novo_cliente
 
-@router.get("/clientes/{id}", response_model=ClienteBase)
-def buscar_cliente(id: str, db: Session = Depends(get_db)):
-    cliente = db.query(ModeloCliente).filter(ModeloCliente.id == id).first()
+@router.get("/clientes/{cpf}", response_model=ClienteBase)
+def buscar_cliente(cpf: str, db: Session = Depends(get_db)):
+    cliente = db.query(ModeloCliente).filter(ModeloCliente.cpf == cpf).first()
     if not cliente:
         raise HTTPException(status_code=404, detail="Cliente não encontrado")
     return cliente
 
-@router.put("/clientes/{id}", response_model=ClienteBase)
-def atualizar_cliente(id: str, cliente_update: ClienteCreate, db: Session = Depends(get_db)):
-    cliente = db.query(ModeloCliente).filter(ModeloCliente.id == id).first()
+@router.put("/clientes/{cpf}", response_model=ClienteBase)
+def atualizar_cliente(cpf: str, cliente_update: ClienteCreate, db: Session = Depends(get_db)):
+    cliente = db.query(ModeloCliente).filter(ModeloCliente.cpf == cpf).first()
     if not cliente:
         raise HTTPException(status_code=404, detail="Cliente não encontrado")
     
@@ -38,11 +38,11 @@ def atualizar_cliente(id: str, cliente_update: ClienteCreate, db: Session = Depe
     db.refresh(cliente)
     return cliente
 
-@router.delete("/clientes/{id}")
-def remover_cliente(id: str, db: Session = Depends(get_db)):
-    cliente = db.query(ModeloCliente).filter(ModeloCliente.id == id).first()
+@router.delete("/clientes/{cpf}")
+def remover_cliente(cpf: str, db: Session = Depends(get_db)):
+    cliente = db.query(ModeloCliente).filter(ModeloCliente.cpf == cpf).first()
     if not cliente:
         raise HTTPException(status_code=404, detail="Cliente não encontrado")
     db.delete(cliente)
     db.commit()
-    return {"message": "Cliente removido com sucesso!"}
+    return {"message": "Cliente removcpfo com sucesso!"}
