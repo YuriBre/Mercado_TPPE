@@ -8,3 +8,4 @@ pylint
 cryptography
 requests
 httpx
+psycopg2-binary
