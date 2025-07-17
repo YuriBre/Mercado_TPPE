@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 
 class ClienteBase(BaseModel):
-    id: Optional[int] = None
+    cpf: str
     nome: str
     endereco: Optional[str] = None
     telefone: Optional[str] = None
@@ -13,3 +13,6 @@ class ClienteBase(BaseModel):
 class ClienteCreate(ClienteBase):
     endereco: Optional[str] = None
     telefone: Optional[str] = None
+
+class ClienteResponse(ClienteBase):
+    pass
