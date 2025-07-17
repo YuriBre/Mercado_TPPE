@@ -7,11 +7,8 @@ services:
     volumes:
       - ./backend:/app
     environment:
-      DATABASE_URL: mysql+pymysql://root:root@database/mercado
+      DATABASE_URL: postgresql://mercado_jghe_user:NuB8IqLQg4PyThnG8jPQhNMlfVw6KE2T@dpg-d1sis215pdvs7397dr10-a.oregon-postgres.render.com:5432/mercado_jghe?sslmode=require
     command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
-    depends_on:
-      database:
-        condition: service_healthy
 
   tests:
     build:
@@ -20,36 +17,11 @@ services:
       - ./backend:/app
     environment:
       - PYTHONPATH=/app
+      - DATABASE_URL=postgresql://mercado_jghe_user:NuB8IqLQg4PyThnG8jPQhNMlfVw6KE2T@dpg-d1sis215pdvs7397dr10-a.oregon-postgres.render.com:5432/mercado_jghe?sslmode=require
     command: ["pytest", "--disable-warnings", "-v"]
     depends_on:
       - backend
-
-  database:
-    image: mysql:8.0
-    container_name: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: mercado
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      retries: 5
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
-    environment:
-      PMA_HOST: database
-      MYSQL_ROOT_PASSWORD: root
-    ports:
-      - "8080:80"
-    depends_on:
-      - database
-
+      
   lint:
     build: 
       context: ./backend
