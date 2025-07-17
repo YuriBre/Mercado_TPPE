@@ -4,7 +4,9 @@ from venda.model import ModeloVenda
 from cliente.model import ModeloCliente
 from produto.model import ModeloProduto
 from database import get_db
-from venda.schemas import VendaCreate, VendaBase
+from venda.schemas import VendaCreate, VendaBase, VendaResponse
+from vendedor.model import ModeloVendedor
+from sqlalchemy.orm import joinedload
 
 router = APIRouter()
 
@@ -14,16 +16,21 @@ def listar_vendas(db: Session = Depends(get_db)):
 
 @router.post("/vendas", response_model=VendaBase)
 def adicionar_venda(venda: VendaCreate, db: Session = Depends(get_db)):
-    cliente = db.query(ModeloCliente).filter(ModeloCliente.id == venda.cliente_id).first()
+    cliente = db.query(ModeloCliente).filter(ModeloCliente.cpf == venda.cliente_cpf).first()
     if not cliente:
         raise HTTPException(status_code=404, detail="Cliente não encontrado")
+
+    vendedor = db.query(ModeloVendedor).filter(ModeloVendedor.cpf == venda.vendedor_cpf).first()
+    if not vendedor:
+        raise HTTPException(status_code=404, detail="Vendedor não encontrado")
     
     produto = db.query(ModeloProduto).filter(ModeloProduto.id == venda.produto_id).first()
     if not produto:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
     
     nova_venda = ModeloVenda(
-        cliente_id=venda.cliente_id,
+        cliente_cpf=venda.cliente_cpf,
+        vendedor_cpf=venda.vendedor_cpf,
         produto_id=venda.produto_id,
         quantidade=venda.quantidade,
         valor_total=0.00
@@ -53,3 +60,19 @@ def remover_venda(venda_id: int, db: Session = Depends(get_db)):
     db.delete(venda)
     db.commit()
     return {"message": "Venda removida com sucesso!"}
+
+@router.get("/vendas/cliente/{cpf}", response_model=list[VendaResponse])
+def listar_vendas_por_cliente(cpf: str, db: Session = Depends(get_db)):
+    vendas = db.query(ModeloVenda)\
+        .options(
+            joinedload(ModeloVenda.cliente),
+            joinedload(ModeloVenda.vendedor),
+            joinedload(ModeloVenda.produto),
+        )\
+        .filter(ModeloVenda.cliente_cpf == cpf)\
+        .all()
+
+    if not vendas:
+        raise HTTPException(status_code=404, detail="Nenhuma venda encontrada para este CPF")
+
+    return vendas
