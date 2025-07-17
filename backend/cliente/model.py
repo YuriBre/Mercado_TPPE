@@ -1,10 +1,10 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, String
 from database import Base
 
 class ModeloCliente(Base):
     __tablename__ = "cliente"
 
-    id = Column(Integer, primary_key=True, index=True)
+    cpf = Column(String(14), primary_key=True, nullable=False)
     nome = Column(String(100), nullable=False)
     endereco = Column(String(150), nullable=False)
     telefone = Column(String(20), nullable=False)
