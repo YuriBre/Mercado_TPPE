@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 from database import Base, engine
 from cliente.router import router as clientes
 from produto.router import router as produtos
@@ -6,6 +8,15 @@ from venda.router import router as vendas
 from vendedor.router import router as vendedores
 
 app = FastAPI()
+
+# Configurar CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 Base.metadata.create_all(bind=engine)
 
