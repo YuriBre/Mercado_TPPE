@@ -1,6 +1,7 @@
 # Mercado TPPE
 
 Este é o projeto de desenvolvimento de um sistema de controle de mercado para a matéria TPPE do curso de Engenharia de Software da FCTE (UnB).
+Baseado no trabalho de OO de Vitor Borges: https://github.com/VitorB2002/TP1-Mercado-OO/tree/TP1/TP1/src/tp1 
 
 ## Objetivo
 
